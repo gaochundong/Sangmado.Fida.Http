@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Happer.Http;
-using Sangmado.Fida.Messaging;
+using Sangmado.Inka.MessageEncoding;
 
 namespace Sangmado.Fida.Http
 {

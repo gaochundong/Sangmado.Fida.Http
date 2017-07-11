@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using Sangmado.Fida.Messaging;
 using Sangmado.Inka.Logging;
+using Sangmado.Inka.MessageEncoding;
 
 namespace Sangmado.Fida.Http
 {

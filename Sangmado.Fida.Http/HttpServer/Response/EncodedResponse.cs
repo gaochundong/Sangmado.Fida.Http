@@ -3,8 +3,8 @@ using System.IO;
 using System.Net;
 using Happer.Http;
 using Happer.Serialization;
-using Sangmado.Fida.Messaging;
 using Sangmado.Inka.Logging;
+using Sangmado.Inka.MessageEncoding;
 
 namespace Sangmado.Fida.Http
 {
