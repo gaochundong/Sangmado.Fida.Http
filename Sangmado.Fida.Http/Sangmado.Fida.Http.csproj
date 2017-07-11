@@ -54,14 +54,14 @@
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="Sangmado.Fida.Messages, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sangmado.Fida.Messaging.1.0.0.0\lib\net46\Sangmado.Fida.Messages.dll</HintPath>
+    <Reference Include="Sangmado.Fida.Messages, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sangmado.Fida.Messaging.1.0.2.0\lib\net46\Sangmado.Fida.Messages.dll</HintPath>
     </Reference>
-    <Reference Include="Sangmado.Fida.Messaging, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sangmado.Fida.Messaging.1.0.0.0\lib\net46\Sangmado.Fida.Messaging.dll</HintPath>
+    <Reference Include="Sangmado.Fida.Messaging, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sangmado.Fida.Messaging.1.0.2.0\lib\net46\Sangmado.Fida.Messaging.dll</HintPath>
     </Reference>
-    <Reference Include="Sangmado.Fida.ServiceModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sangmado.Fida.Messaging.1.0.0.0\lib\net46\Sangmado.Fida.ServiceModel.dll</HintPath>
+    <Reference Include="Sangmado.Fida.ServiceModel, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sangmado.Fida.Messaging.1.0.2.0\lib\net46\Sangmado.Fida.ServiceModel.dll</HintPath>
     </Reference>
     <Reference Include="Sangmado.Inka.Configuration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sangmado.Inka.Configuration.1.0.0.0\lib\net46\Sangmado.Inka.Configuration.dll</HintPath>
