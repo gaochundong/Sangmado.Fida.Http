@@ -92,6 +92,7 @@
     <Compile Include="BufferManager\GrowingByteBufferManager.cs" />
     <Compile Include="BufferManager\IBufferManager.cs" />
     <Compile Include="HttpClient\EncodedHttpClient.cs" />
+    <Compile Include="HttpClient\Exceptions\UnanticipatedResponseException.cs" />
     <Compile Include="HttpClient\IEncodedHttpClient.cs" />
     <Compile Include="HttpServer\IHttpEngineBuilder.cs" />
     <Compile Include="HttpServer\InjectedSelfHost.cs" />

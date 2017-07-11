@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using Sangmado.Fida.Messaging;
 using Sangmado.Inka.Logging;
@@ -12,6 +13,14 @@ namespace Sangmado.Fida.Http
         private IMessageEncoder _encoder;
         private IMessageDecoder _decoder;
 
+        private static readonly HttpClient _httpClient;
+
+        static EncodedHttpClient()
+        {
+            _httpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(60) };
+            _httpClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
+        }
+
         public EncodedHttpClient(IMessageEncoder encoder, IMessageDecoder decoder)
         {
             if (encoder == null)
@@ -23,19 +32,32 @@ namespace Sangmado.Fida.Http
             _decoder = decoder;
         }
 
-        public T Get<T>(string requestUri)
+        #region GET
+
+        public T Get<T>(string url)
         {
             T result = default(T);
 
             try
             {
                 byte[] responseBody = null;
-                using (var client = new HttpClient())
+                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = client.GetAsync(requestUri).GetAwaiter().GetResult();
-                    if (response.IsSuccessStatusCode)
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    _log.WarnFormat("Get, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
+
+                    // NotFound will return a null object
+                    if (response.StatusCode != HttpStatusCode.NotFound)
                     {
-                        responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                        // otherwise, any other status code within response means unsuccessful
+                        throw new UnanticipatedResponseException(
+                            string.Format("HTTP [GET] response with StatusCode[{0}|{1}] was unanticipated.",
+                                response.StatusCode, response.StatusCode.ToString()));
                     }
                 }
 
@@ -46,45 +68,60 @@ namespace Sangmado.Fida.Http
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Get, RequestUri[{0}], Error[{1}].", requestUri, ex.Message), ex);
+                _log.Error(string.Format("Get, Url[{0}], Error[{1}].", url, ex.Message), ex);
                 result = default(T);
             }
 
             return result;
         }
 
-        public void Put(string requestUri, object content)
+        #endregion
+
+        #region PUT
+
+        public void Put(string url, object content)
         {
-            PutEncoded(requestUri, _encoder.EncodeMessage(content));
+            PutEncoded(url, _encoder.EncodeMessage(content));
         }
 
-        public T Put<T>(string requestUri, object content)
+        public T Put<T>(string url, object content)
         {
-            return PutEncoded<T>(requestUri, _encoder.EncodeMessage(content));
+            return PutEncoded<T>(url, _encoder.EncodeMessage(content));
         }
 
-        public void PutEncoded(string requestUri, byte[] content)
+        public void PutEncoded(string url, byte[] content)
         {
             try
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
-                using (var client = new HttpClient())
+                var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = client.PutAsync(requestUri, httpContent).GetAwaiter().GetResult();
-                    if (response.IsSuccessStatusCode)
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
+
+                    // NotFound will do nothing
+                    if (response.StatusCode != HttpStatusCode.NotFound)
                     {
-                        responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                        // otherwise, any other status code within response means unsuccessful
+                        throw new UnanticipatedResponseException(
+                            string.Format("HTTP [PUT] response with StatusCode[{0}|{1}] was unanticipated.",
+                                response.StatusCode, response.StatusCode.ToString()));
                     }
                 }
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Put, RequestUri[{0}], Error[{1}].", requestUri, ex.Message), ex);
+                _log.Error(string.Format("Put, Url[{0}], Error[{1}].", url, ex.Message), ex);
             }
         }
 
-        public T PutEncoded<T>(string requestUri, byte[] content)
+        public T PutEncoded<T>(string url, byte[] content)
         {
             T result = default(T);
 
@@ -92,12 +129,23 @@ namespace Sangmado.Fida.Http
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
-                using (var client = new HttpClient())
+                var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = client.PutAsync(requestUri, httpContent).GetAwaiter().GetResult();
-                    if (response.IsSuccessStatusCode)
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
+
+                    // NotFound will return a null object
+                    if (response.StatusCode != HttpStatusCode.NotFound)
                     {
-                        responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                        // otherwise, any other status code within response means unsuccessful
+                        throw new UnanticipatedResponseException(
+                            string.Format("HTTP [PUT] response with StatusCode[{0}|{1}] was unanticipated.",
+                                response.StatusCode, response.StatusCode.ToString()));
                     }
                 }
 
@@ -108,45 +156,53 @@ namespace Sangmado.Fida.Http
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Put, RequestUri[{0}], Error[{1}].", requestUri, ex.Message), ex);
+                _log.Error(string.Format("Put, Url[{0}], Error[{1}].", url, ex.Message), ex);
                 result = default(T);
             }
 
             return result;
         }
 
-        public void Post(string requestUri, object content)
+        #endregion
+
+        #region POST
+
+        public void Post(string url, object content)
         {
-            PostEncoded(requestUri, _encoder.EncodeMessage(content));
+            PostEncoded(url, _encoder.EncodeMessage(content));
         }
 
-        public T Post<T>(string requestUri, object content)
+        public T Post<T>(string url, object content)
         {
-            return PostEncoded<T>(requestUri, _encoder.EncodeMessage(content));
+            return PostEncoded<T>(url, _encoder.EncodeMessage(content));
         }
 
-        public void PostEncoded(string requestUri, byte[] content)
+        public void PostEncoded(string url, byte[] content)
         {
             try
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
-                using (var client = new HttpClient())
+                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = client.PostAsync(requestUri, httpContent).GetAwaiter().GetResult();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-                    }
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    // any other status code within response means unsuccessful
+                    throw new UnanticipatedResponseException(
+                        string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
+                            response.StatusCode, response.StatusCode.ToString()));
                 }
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Post, RequestUri[{0}], Error[{1}].", requestUri, ex.Message), ex);
+                _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
             }
         }
 
-        public T PostEncoded<T>(string requestUri, byte[] content)
+        public T PostEncoded<T>(string url, byte[] content)
         {
             T result = default(T);
 
@@ -154,13 +210,17 @@ namespace Sangmado.Fida.Http
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
-                using (var client = new HttpClient())
+                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
                 {
-                    var response = client.PostAsync(requestUri, httpContent).GetAwaiter().GetResult();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-                    }
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    // any other status code within response means unsuccessful
+                    throw new UnanticipatedResponseException(
+                        string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
+                            response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
@@ -170,11 +230,13 @@ namespace Sangmado.Fida.Http
             }
             catch (Exception ex)
             {
-                _log.Error(string.Format("Post, RequestUri[{0}], Error[{1}].", requestUri, ex.Message), ex);
+                _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
                 result = default(T);
             }
 
             return result;
         }
+
+        #endregion
     }
 }
