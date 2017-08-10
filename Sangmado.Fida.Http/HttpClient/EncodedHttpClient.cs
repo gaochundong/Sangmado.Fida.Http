@@ -18,7 +18,6 @@ namespace Sangmado.Fida.Http
         static EncodedHttpClient()
         {
             _httpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(60) };
-            _httpClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
         }
 
         public EncodedHttpClient(IMessageEncoder encoder, IMessageDecoder decoder)
@@ -231,6 +230,77 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
+                result = default(T);
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region DELETE
+
+        public void Delete(string url)
+        {
+            try
+            {
+                var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
+                if (!response.IsSuccessStatusCode)
+                {
+                    _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
+
+                    // NotFound will return a null object
+                    if (response.StatusCode != HttpStatusCode.NotFound)
+                    {
+                        // otherwise, any other status code within response means unsuccessful
+                        throw new UnanticipatedResponseException(
+                            string.Format("HTTP [DELETE] response with StatusCode[{0}|{1}] was unanticipated.",
+                                response.StatusCode, response.StatusCode.ToString()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(string.Format("Delete, Url[{0}], Error[{1}].", url, ex.Message), ex);
+            }
+        }
+
+        public T Delete<T>(string url)
+        {
+            T result = default(T);
+
+            try
+            {
+                byte[] responseBody = null;
+                var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
+                {
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
+
+                    // NotFound will return a null object
+                    if (response.StatusCode != HttpStatusCode.NotFound)
+                    {
+                        // otherwise, any other status code within response means unsuccessful
+                        throw new UnanticipatedResponseException(
+                            string.Format("HTTP [DELETE] response with StatusCode[{0}|{1}] was unanticipated.",
+                                response.StatusCode, response.StatusCode.ToString()));
+                    }
+                }
+
+                if (responseBody != null && responseBody.Length > 0)
+                {
+                    result = _decoder.DecodeMessage<T>(responseBody, 0, responseBody.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(string.Format("Delete, Url[{0}], Error[{1}].", url, ex.Message), ex);
                 result = default(T);
             }
 
