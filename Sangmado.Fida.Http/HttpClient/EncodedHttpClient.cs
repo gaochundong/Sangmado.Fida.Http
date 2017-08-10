@@ -41,7 +41,7 @@ namespace Sangmado.Fida.Http
             {
                 byte[] responseBody = null;
                 var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
                 }
@@ -50,7 +50,7 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Get, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound will return a null object
+                    // NotFound indicates that the requested resource does not exist on the server.
                     if (response.StatusCode != HttpStatusCode.NotFound)
                     {
                         // otherwise, any other status code within response means unsuccessful
@@ -95,7 +95,7 @@ namespace Sangmado.Fida.Http
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
                 }
@@ -104,7 +104,7 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound will do nothing
+                    // NotFound indicates that the requested resource does not exist on the server.
                     if (response.StatusCode != HttpStatusCode.NotFound)
                     {
                         // otherwise, any other status code within response means unsuccessful
@@ -129,7 +129,7 @@ namespace Sangmado.Fida.Http
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
                 }
@@ -138,7 +138,7 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound will return a null object
+                    // NotFound indicates that the requested resource does not exist on the server.
                     if (response.StatusCode != HttpStatusCode.NotFound)
                     {
                         // otherwise, any other status code within response means unsuccessful
@@ -183,7 +183,7 @@ namespace Sangmado.Fida.Http
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
                 }
@@ -210,7 +210,7 @@ namespace Sangmado.Fida.Http
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
                 }
@@ -250,7 +250,7 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound will return a null object
+                    // NotFound indicates that the requested resource does not exist on the server.
                     if (response.StatusCode != HttpStatusCode.NotFound)
                     {
                         // otherwise, any other status code within response means unsuccessful
@@ -274,7 +274,7 @@ namespace Sangmado.Fida.Http
             {
                 byte[] responseBody = null;
                 var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
                 }
@@ -283,7 +283,7 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound will return a null object
+                    // NotFound indicates that the requested resource does not exist on the server.
                     if (response.StatusCode != HttpStatusCode.NotFound)
                     {
                         // otherwise, any other status code within response means unsuccessful
