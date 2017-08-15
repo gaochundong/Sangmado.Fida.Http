@@ -204,12 +204,19 @@ namespace Sangmado.Fida.Http
         public T PostEncoded<T>(string url, byte[] content)
         {
             T result = default(T);
-
+            HttpStatusCode statusCode = HttpStatusCode.OK;
             try
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+
+                statusCode = response.StatusCode;
+                if (typeof(T) == typeof(HttpStatusCode))
+                {
+                    result = (T)Convert.ChangeType(statusCode, typeof(T));
+                }
+
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
@@ -230,7 +237,6 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
-                result = default(T);
             }
 
             return result;
