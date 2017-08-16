@@ -57,7 +57,8 @@ namespace Sangmado.Fida.Http
 
         public T Get<T>(string url)
         {
-            return Get<T>(url, out HttpStatusCode throwAway);
+            HttpStatusCode throwAway;
+            return Get<T>(url, out throwAway);
         }
 
         public T Get<T>(string url, out HttpStatusCode statusCode)
@@ -147,7 +148,8 @@ namespace Sangmado.Fida.Http
 
         public T PutEncoded<T>(string url, byte[] content)
         {
-            return PutEncoded<T>(url, content, out HttpStatusCode throwAway);
+            HttpStatusCode throwAway;
+            return PutEncoded<T>(url, content, out throwAway);
         }
 
         public T PutEncoded<T>(string url, byte[] content, out HttpStatusCode statusCode)
@@ -238,7 +240,8 @@ namespace Sangmado.Fida.Http
 
         public T PostEncoded<T>(string url, byte[] content)
         {
-            return PostEncoded<T>(url, content, out HttpStatusCode throwAway);
+            HttpStatusCode throwAway;
+            return PostEncoded<T>(url, content, out throwAway);
         }
 
         public T PostEncoded<T>(string url, byte[] content, out HttpStatusCode statusCode)
@@ -305,7 +308,8 @@ namespace Sangmado.Fida.Http
 
         public T Delete<T>(string url)
         {
-            return Delete<T>(url, out HttpStatusCode throwAway);
+            HttpStatusCode throwAway;
+            return Delete<T>(url, out throwAway);
         }
 
         public T Delete<T>(string url, out HttpStatusCode statusCode)
