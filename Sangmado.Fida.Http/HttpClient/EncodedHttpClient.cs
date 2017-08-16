@@ -35,12 +35,19 @@ namespace Sangmado.Fida.Http
 
         public T Get<T>(string url)
         {
+            return Get<T>(url, out HttpStatusCode throwAway);
+        }
+
+        public T Get<T>(string url, out HttpStatusCode statusCode)
+        {
             T result = default(T);
+            statusCode = HttpStatusCode.InternalServerError;
 
             try
             {
                 byte[] responseBody = null;
                 var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
@@ -78,9 +85,9 @@ namespace Sangmado.Fida.Http
 
         #region PUT
 
-        public void Put(string url, object content)
+        public HttpStatusCode Put(string url, object content)
         {
-            PutEncoded(url, _encoder.EncodeMessage(content));
+            return PutEncoded(url, _encoder.EncodeMessage(content));
         }
 
         public T Put<T>(string url, object content)
@@ -88,13 +95,21 @@ namespace Sangmado.Fida.Http
             return PutEncoded<T>(url, _encoder.EncodeMessage(content));
         }
 
-        public void PutEncoded(string url, byte[] content)
+        public T Put<T>(string url, object content, out HttpStatusCode statusCode)
         {
+            return PutEncoded<T>(url, _encoder.EncodeMessage(content), out statusCode);
+        }
+
+        public HttpStatusCode PutEncoded(string url, byte[] content)
+        {
+            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+
             try
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
@@ -118,17 +133,26 @@ namespace Sangmado.Fida.Http
             {
                 _log.Error(string.Format("Put, Url[{0}], Error[{1}].", url, ex.Message), ex);
             }
+
+            return statusCode;
         }
 
         public T PutEncoded<T>(string url, byte[] content)
         {
+            return PutEncoded<T>(url, content, out HttpStatusCode throwAway);
+        }
+
+        public T PutEncoded<T>(string url, byte[] content, out HttpStatusCode statusCode)
+        {
             T result = default(T);
+            statusCode = HttpStatusCode.InternalServerError;
 
             try
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
@@ -166,14 +190,9 @@ namespace Sangmado.Fida.Http
 
         #region POST
 
-        public void Post(string url, object content)
+        public HttpStatusCode Post(string url, object content)
         {
-            PostEncoded(url, _encoder.EncodeMessage(content));
-        }
-
-        public void Post(string url, object content, out HttpStatusCode statusCode)
-        {
-            PostEncoded(url, _encoder.EncodeMessage(content), out statusCode);
+            return PostEncoded(url, _encoder.EncodeMessage(content));
         }
 
         public T Post<T>(string url, object content)
@@ -186,34 +205,10 @@ namespace Sangmado.Fida.Http
             return PostEncoded<T>(url, _encoder.EncodeMessage(content), out statusCode);
         }
 
-        public void PostEncoded(string url, byte[] content)
+        public HttpStatusCode PostEncoded(string url, byte[] content)
         {
-            try
-            {
-                byte[] responseBody = null;
-                var httpContent = new ByteArrayContent(content);
-                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
-                {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-                }
-                else
-                {
-                    // any other status code within response means unsuccessful
-                    throw new UnanticipatedResponseException(
-                        string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
-                            response.StatusCode, response.StatusCode.ToString()));
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
-            }
-        }
+            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
 
-        public void PostEncoded(string url, byte[] content, out HttpStatusCode statusCode)
-        {
-            statusCode = HttpStatusCode.OK;
             try
             {
                 byte[] responseBody = null;
@@ -236,53 +231,26 @@ namespace Sangmado.Fida.Http
             {
                 _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
             }
+
+            return statusCode;
         }
 
         public T PostEncoded<T>(string url, byte[] content)
         {
-            T result = default(T);
-            try
-            {
-                byte[] responseBody = null;
-                var httpContent = new ByteArrayContent(content);
-                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
-
-                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
-                {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-                }
-                else
-                {
-                    // any other status code within response means unsuccessful
-                    throw new UnanticipatedResponseException(
-                        string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
-                            response.StatusCode, response.StatusCode.ToString()));
-                }
-
-                if (responseBody != null && responseBody.Length > 0)
-                {
-                    result = _decoder.DecodeMessage<T>(responseBody, 0, responseBody.Length);
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
-            }
-
-            return result;
+            return PostEncoded<T>(url, content, out HttpStatusCode throwAway);
         }
 
         public T PostEncoded<T>(string url, byte[] content, out HttpStatusCode statusCode)
         {
             T result = default(T);
-            statusCode = HttpStatusCode.OK;
+            statusCode = HttpStatusCode.InternalServerError;
+
             try
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
                 statusCode = response.StatusCode;
-
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
@@ -312,11 +280,14 @@ namespace Sangmado.Fida.Http
 
         #region DELETE
 
-        public void Delete(string url)
+        public HttpStatusCode Delete(string url)
         {
+            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+
             try
             {
                 var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
                 if (!response.IsSuccessStatusCode)
                 {
                     _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
@@ -336,16 +307,25 @@ namespace Sangmado.Fida.Http
             {
                 _log.Error(string.Format("Delete, Url[{0}], Error[{1}].", url, ex.Message), ex);
             }
+
+            return statusCode;
         }
 
         public T Delete<T>(string url)
         {
+            return Delete<T>(url, out HttpStatusCode throwAway);
+        }
+
+        public T Delete<T>(string url, out HttpStatusCode statusCode)
+        {
             T result = default(T);
+            statusCode = HttpStatusCode.InternalServerError;
 
             try
             {
                 byte[] responseBody = null;
                 var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();

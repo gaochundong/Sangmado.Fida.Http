@@ -4,22 +4,26 @@ namespace Sangmado.Fida.Http
 {
     public interface IEncodedHttpClient
     {
-        T Get<T>(string requestUri);
+        T Get<T>(string url);
+        T Get<T>(string url, out HttpStatusCode statusCode);
 
-        void Put(string requestUri, object content);
-        T Put<T>(string requestUri, object content);
+        HttpStatusCode Put(string url, object content);
+        T Put<T>(string url, object content);
+        T Put<T>(string url, object content, out HttpStatusCode statusCode);
 
-        void PutEncoded(string requestUri, byte[] content);
-        T PutEncoded<T>(string requestUri, byte[] content);
+        HttpStatusCode PutEncoded(string url, byte[] content);
+        T PutEncoded<T>(string url, byte[] content);
 
-        void Post(string requestUri, object content);
-        void Post(string url, object content, out HttpStatusCode statusCode);
-        T Post<T>(string requestUri, object content);
+        HttpStatusCode Post(string url, object content);
+        T Post<T>(string url, object content);
         T Post<T>(string url, object content, out HttpStatusCode statusCode);
 
-        void PostEncoded(string requestUri, byte[] content);
-        void PostEncoded(string url, byte[] content, out HttpStatusCode statusCode);
-        T PostEncoded<T>(string requestUri, byte[] content);
+        HttpStatusCode PostEncoded(string url, byte[] content);
+        T PostEncoded<T>(string url, byte[] content);
         T PostEncoded<T>(string url, byte[] content, out HttpStatusCode statusCode);
+
+        HttpStatusCode Delete(string url);
+        T Delete<T>(string url);
+        T Delete<T>(string url, out HttpStatusCode statusCode);
     }
 }
