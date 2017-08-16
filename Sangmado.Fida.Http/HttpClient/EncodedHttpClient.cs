@@ -33,6 +33,28 @@ namespace Sangmado.Fida.Http
 
         #region GET
 
+        public HttpStatusCode Get(string url)
+        {
+            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+
+            try
+            {
+                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
+                if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
+                {
+                    _log.WarnFormat("Get, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(string.Format("Get, Url[{0}], Error[{1}].", url, ex.Message), ex);
+            }
+
+            return statusCode;
+        }
+
         public T Get<T>(string url)
         {
             return Get<T>(url, out HttpStatusCode throwAway);
@@ -106,27 +128,13 @@ namespace Sangmado.Fida.Http
 
             try
             {
-                byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
                 statusCode = response.StatusCode;
-                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
-                {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-                }
-                else
+                if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
-
-                    // NotFound indicates that the requested resource does not exist on the server.
-                    if (response.StatusCode != HttpStatusCode.NotFound)
-                    {
-                        // otherwise, any other status code within response means unsuccessful
-                        throw new UnanticipatedResponseException(
-                            string.Format("HTTP [PUT] response with StatusCode[{0}|{1}] was unanticipated.",
-                                response.StatusCode, response.StatusCode.ToString()));
-                    }
                 }
             }
             catch (Exception ex)
@@ -211,20 +219,13 @@ namespace Sangmado.Fida.Http
 
             try
             {
-                byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
                 statusCode = response.StatusCode;
-                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
+                if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-                }
-                else
-                {
-                    // any other status code within response means unsuccessful
-                    throw new UnanticipatedResponseException(
-                        string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
-                            response.StatusCode, response.StatusCode.ToString()));
+                    _log.WarnFormat("Post, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
                 }
             }
             catch (Exception ex)
@@ -288,19 +289,10 @@ namespace Sangmado.Fida.Http
             {
                 var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
                 statusCode = response.StatusCode;
-                if (!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
-
-                    // NotFound indicates that the requested resource does not exist on the server.
-                    if (response.StatusCode != HttpStatusCode.NotFound)
-                    {
-                        // otherwise, any other status code within response means unsuccessful
-                        throw new UnanticipatedResponseException(
-                            string.Format("HTTP [DELETE] response with StatusCode[{0}|{1}] was unanticipated.",
-                                response.StatusCode, response.StatusCode.ToString()));
-                    }
                 }
             }
             catch (Exception ex)

@@ -4,6 +4,7 @@ namespace Sangmado.Fida.Http
 {
     public interface IEncodedHttpClient
     {
+        HttpStatusCode Get(string url);
         T Get<T>(string url);
         T Get<T>(string url, out HttpStatusCode statusCode);
 
