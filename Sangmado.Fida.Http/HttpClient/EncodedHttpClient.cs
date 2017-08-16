@@ -171,9 +171,19 @@ namespace Sangmado.Fida.Http
             PostEncoded(url, _encoder.EncodeMessage(content));
         }
 
+        public void Post(string url, object content, out HttpStatusCode statusCode)
+        {
+            PostEncoded(url, _encoder.EncodeMessage(content), out statusCode);
+        }
+
         public T Post<T>(string url, object content)
         {
             return PostEncoded<T>(url, _encoder.EncodeMessage(content));
+        }
+
+        public T Post<T>(string url, object content, out HttpStatusCode statusCode)
+        {
+            return PostEncoded<T>(url, _encoder.EncodeMessage(content), out statusCode);
         }
 
         public void PostEncoded(string url, byte[] content)
@@ -201,15 +211,42 @@ namespace Sangmado.Fida.Http
             }
         }
 
-        public T PostEncoded<T>(string url, byte[] content)
+        public void PostEncoded(string url, byte[] content, out HttpStatusCode statusCode)
         {
-            T result = default(T);
-
+            statusCode = HttpStatusCode.OK;
             try
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
                 var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
+                {
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    // any other status code within response means unsuccessful
+                    throw new UnanticipatedResponseException(
+                        string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
+                            response.StatusCode, response.StatusCode.ToString()));
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
+            }
+        }
+
+        public T PostEncoded<T>(string url, byte[] content)
+        {
+            T result = default(T);
+            try
+            {
+                byte[] responseBody = null;
+                var httpContent = new ByteArrayContent(content);
+                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
@@ -230,7 +267,42 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
-                result = default(T);
+            }
+
+            return result;
+        }
+
+        public T PostEncoded<T>(string url, byte[] content, out HttpStatusCode statusCode)
+        {
+            T result = default(T);
+            statusCode = HttpStatusCode.OK;
+            try
+            {
+                byte[] responseBody = null;
+                var httpContent = new ByteArrayContent(content);
+                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+                statusCode = response.StatusCode;
+
+                if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
+                {
+                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                }
+                else
+                {
+                    // any other status code within response means unsuccessful
+                    throw new UnanticipatedResponseException(
+                        string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
+                            response.StatusCode, response.StatusCode.ToString()));
+                }
+
+                if (responseBody != null && responseBody.Length > 0)
+                {
+                    result = _decoder.DecodeMessage<T>(responseBody, 0, responseBody.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
             }
 
             return result;
