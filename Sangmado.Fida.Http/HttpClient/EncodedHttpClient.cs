@@ -80,14 +80,9 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Get, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound indicates that the requested resource does not exist on the server.
-                    if (response.StatusCode != HttpStatusCode.NotFound)
-                    {
-                        // otherwise, any other status code within response means unsuccessful
-                        throw new UnanticipatedResponseException(
-                            string.Format("HTTP [GET] response with StatusCode[{0}|{1}] was unanticipated.",
-                                response.StatusCode, response.StatusCode.ToString()));
-                    }
+                    throw new UnanticipatedResponseException(
+                        string.Format("HTTP [GET] response with StatusCode[{0}|{1}] was unanticipated.",
+                            response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
@@ -172,14 +167,9 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound indicates that the requested resource does not exist on the server.
-                    if (response.StatusCode != HttpStatusCode.NotFound)
-                    {
-                        // otherwise, any other status code within response means unsuccessful
-                        throw new UnanticipatedResponseException(
-                            string.Format("HTTP [PUT] response with StatusCode[{0}|{1}] was unanticipated.",
-                                response.StatusCode, response.StatusCode.ToString()));
-                    }
+                    throw new UnanticipatedResponseException(
+                        string.Format("HTTP [PUT] response with StatusCode[{0}|{1}] was unanticipated.",
+                            response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
@@ -261,7 +251,9 @@ namespace Sangmado.Fida.Http
                 }
                 else
                 {
-                    // any other status code within response means unsuccessful
+                    _log.WarnFormat("Post, Url[{0}], StatusCode[{1}|{2}].",
+                        url, response.StatusCode, response.StatusCode.ToString());
+
                     throw new UnanticipatedResponseException(
                         string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
                             response.StatusCode, response.StatusCode.ToString()));
@@ -331,14 +323,9 @@ namespace Sangmado.Fida.Http
                     _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
                         url, response.StatusCode, response.StatusCode.ToString());
 
-                    // NotFound indicates that the requested resource does not exist on the server.
-                    if (response.StatusCode != HttpStatusCode.NotFound)
-                    {
-                        // otherwise, any other status code within response means unsuccessful
-                        throw new UnanticipatedResponseException(
-                            string.Format("HTTP [DELETE] response with StatusCode[{0}|{1}] was unanticipated.",
-                                response.StatusCode, response.StatusCode.ToString()));
-                    }
+                    throw new UnanticipatedResponseException(
+                        string.Format("HTTP [DELETE] response with StatusCode[{0}|{1}] was unanticipated.",
+                            response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
