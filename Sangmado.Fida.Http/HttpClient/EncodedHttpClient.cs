@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using Sangmado.Fida.MessageEncoding;
 using Sangmado.Inka.Logging;
-using Sangmado.Inka.MessageEncoding;
 
 namespace Sangmado.Fida.Http
 {
     public class EncodedHttpClient : IEncodedHttpClient
     {
         private static ILog _log = Logger.Get<EncodedHttpClient>();
-
+        private static HttpClient _httpClient;
         private IMessageEncoder _encoder;
         private IMessageDecoder _decoder;
 
-        private static readonly HttpClient _httpClient;
-
         static EncodedHttpClient()
         {
-            _httpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(60) };
+            var defaultHttpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(60) };
+            SetHttpClient(defaultHttpClient);
+        }
+
+        public static void SetHttpClient(HttpClient httpClient)
+        {
+            if (httpClient != null)
+            {
+                _httpClient = httpClient;
+            }
         }
 
         public EncodedHttpClient(IMessageEncoder encoder, IMessageDecoder decoder)
@@ -50,6 +57,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Get, Url[{0}], Error[{1}].", url, ex.Message), ex);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return statusCode;
@@ -93,7 +101,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Get, Url[{0}], Error[{1}].", url, ex.Message), ex);
-                result = default(T);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return result;
@@ -136,6 +144,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Put, Url[{0}], Error[{1}].", url, ex.Message), ex);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return statusCode;
@@ -180,7 +189,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Put, Url[{0}], Error[{1}].", url, ex.Message), ex);
-                result = default(T);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return result;
@@ -223,6 +232,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return statusCode;
@@ -267,6 +277,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Post, Url[{0}], Error[{1}].", url, ex.Message), ex);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return result;
@@ -293,6 +304,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Delete, Url[{0}], Error[{1}].", url, ex.Message), ex);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return statusCode;
@@ -336,7 +348,7 @@ namespace Sangmado.Fida.Http
             catch (Exception ex)
             {
                 _log.Error(string.Format("Delete, Url[{0}], Error[{1}].", url, ex.Message), ex);
-                result = default(T);
+                throw new HttpRequestException(ex.Message, ex);
             }
 
             return result;

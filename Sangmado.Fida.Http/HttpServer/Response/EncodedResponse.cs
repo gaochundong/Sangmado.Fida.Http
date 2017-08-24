@@ -4,7 +4,7 @@ using System.Net;
 using Happer.Http;
 using Happer.Serialization;
 using Sangmado.Inka.Logging;
-using Sangmado.Inka.MessageEncoding;
+using Sangmado.Fida.MessageEncoding;
 
 namespace Sangmado.Fida.Http
 {

@@ -51,8 +51,8 @@
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="Sangmado.Inka.Configuration, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sangmado.Inka.Configuration.1.0.1.0\lib\net46\Sangmado.Inka.Configuration.dll</HintPath>
+    <Reference Include="Sangmado.Fida.MessageEncoding, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sangmado.Fida.MessageEncoding.1.0.1.0\lib\net46\Sangmado.Fida.MessageEncoding.dll</HintPath>
     </Reference>
     <Reference Include="Sangmado.Inka.Extensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sangmado.Inka.Extensions.1.0.0.0\lib\net46\Sangmado.Inka.Extensions.dll</HintPath>
@@ -60,11 +60,8 @@
     <Reference Include="Sangmado.Inka.Logging, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sangmado.Inka.Logging.1.0.0.0\lib\net46\Sangmado.Inka.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Sangmado.Inka.MessageEncoding, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sangmado.Inka.MessageEncoding.1.0.0.0\lib\net46\Sangmado.Inka.MessageEncoding.dll</HintPath>
-    </Reference>
-    <Reference Include="Sangmado.Inka.Serialization, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sangmado.Inka.Serialization.1.0.3.0\lib\net46\Sangmado.Inka.Serialization.dll</HintPath>
+    <Reference Include="Sangmado.Inka.Serialization, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sangmado.Inka.Serialization.1.0.4.0\lib\net46\Sangmado.Inka.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Sangmado.Inka.Serialization.ProtocolBuffers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sangmado.Inka.Serialization.ProtocolBuffers.1.0.0.0\lib\net46\Sangmado.Inka.Serialization.ProtocolBuffers.dll</HintPath>
@@ -85,12 +82,8 @@
     <Compile Include="HttpClient\EncodedHttpClient.cs" />
     <Compile Include="HttpClient\Exceptions\UnanticipatedResponseException.cs" />
     <Compile Include="HttpClient\IEncodedHttpClient.cs" />
-    <Compile Include="HttpServer\IHttpEngineBuilder.cs" />
-    <Compile Include="HttpServer\InjectedSelfHost.cs" />
-    <Compile Include="HttpServer\PerResolveModuleContainer.cs" />
     <Compile Include="HttpServer\Request\RequestBodyDecoder.cs" />
     <Compile Include="HttpServer\Response\EncodedResponse.cs" />
-    <Compile Include="HttpServer\SelfHostHttpServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

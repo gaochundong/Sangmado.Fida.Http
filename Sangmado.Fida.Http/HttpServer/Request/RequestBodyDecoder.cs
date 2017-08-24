@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Happer.Http;
-using Sangmado.Inka.MessageEncoding;
+using Sangmado.Fida.MessageEncoding;
 
 namespace Sangmado.Fida.Http
 {
@@ -12,7 +12,13 @@ namespace Sangmado.Fida.Http
 
             var buffer = bufferManager.BorrowBuffer();
             int count = request.Body.Read(buffer, 0, buffer.Length);
-            if (count == 0 || count == buffer.Length)
+
+            if (count == 0)
+            {
+                bufferManager.ReturnBuffer(buffer);
+                return HttpStatusCode.BadRequest;
+            }
+            if (count == buffer.Length)
             {
                 bufferManager.ReturnBuffer(buffer);
                 return HttpStatusCode.RequestEntityTooLarge;
