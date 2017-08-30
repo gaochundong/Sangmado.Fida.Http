@@ -51,7 +51,7 @@ namespace Sangmado.Fida.Http
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     _log.WarnFormat("Get, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
                 }
             }
             catch (Exception ex)
@@ -86,11 +86,11 @@ namespace Sangmado.Fida.Http
                 else
                 {
                     _log.WarnFormat("Get, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
                         string.Format("HTTP [GET] response with StatusCode[{0}|{1}] was unanticipated.",
-                            response.StatusCode, response.StatusCode.ToString()));
+                            (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
@@ -138,7 +138,7 @@ namespace Sangmado.Fida.Http
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
                 }
             }
             catch (Exception ex)
@@ -174,11 +174,11 @@ namespace Sangmado.Fida.Http
                 else
                 {
                     _log.WarnFormat("Put, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
                         string.Format("HTTP [PUT] response with StatusCode[{0}|{1}] was unanticipated.",
-                            response.StatusCode, response.StatusCode.ToString()));
+                            (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
@@ -226,7 +226,7 @@ namespace Sangmado.Fida.Http
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     _log.WarnFormat("Post, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
                 }
             }
             catch (Exception ex)
@@ -262,11 +262,11 @@ namespace Sangmado.Fida.Http
                 else
                 {
                     _log.WarnFormat("Post, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
                         string.Format("HTTP [POST] response with StatusCode[{0}|{1}] was unanticipated.",
-                            response.StatusCode, response.StatusCode.ToString()));
+                            (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
@@ -298,7 +298,7 @@ namespace Sangmado.Fida.Http
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
                     _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
                 }
             }
             catch (Exception ex)
@@ -333,11 +333,11 @@ namespace Sangmado.Fida.Http
                 else
                 {
                     _log.WarnFormat("Delete, Url[{0}], StatusCode[{1}|{2}].",
-                        url, response.StatusCode, response.StatusCode.ToString());
+                        url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
                         string.Format("HTTP [DELETE] response with StatusCode[{0}|{1}] was unanticipated.",
-                            response.StatusCode, response.StatusCode.ToString()));
+                            (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
                 if (responseBody != null && responseBody.Length > 0)
