@@ -46,7 +46,7 @@ namespace Sangmado.Fida.Http
 
             try
             {
-                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+                var response = _httpClient.GetAsync(url).Result;
                 statusCode = response.StatusCode;
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
@@ -77,11 +77,11 @@ namespace Sangmado.Fida.Http
             try
             {
                 byte[] responseBody = null;
-                var response = _httpClient.GetAsync(url).GetAwaiter().GetResult();
+                var response = _httpClient.GetAsync(url).Result;
                 statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                    responseBody = response.Content.ReadAsByteArrayAsync().Result;
                 }
                 else
                 {
@@ -133,7 +133,7 @@ namespace Sangmado.Fida.Http
             try
             {
                 var httpContent = new ByteArrayContent(content);
-                var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
+                var response = _httpClient.PutAsync(url, httpContent).Result;
                 statusCode = response.StatusCode;
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
@@ -165,11 +165,11 @@ namespace Sangmado.Fida.Http
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
-                var response = _httpClient.PutAsync(url, httpContent).GetAwaiter().GetResult();
+                var response = _httpClient.PutAsync(url, httpContent).Result;
                 statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                    responseBody = response.Content.ReadAsByteArrayAsync().Result;
                 }
                 else
                 {
@@ -221,7 +221,7 @@ namespace Sangmado.Fida.Http
             try
             {
                 var httpContent = new ByteArrayContent(content);
-                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+                var response = _httpClient.PostAsync(url, httpContent).Result;
                 statusCode = response.StatusCode;
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
@@ -253,11 +253,11 @@ namespace Sangmado.Fida.Http
             {
                 byte[] responseBody = null;
                 var httpContent = new ByteArrayContent(content);
-                var response = _httpClient.PostAsync(url, httpContent).GetAwaiter().GetResult();
+                var response = _httpClient.PostAsync(url, httpContent).Result;
                 statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                    responseBody = response.Content.ReadAsByteArrayAsync().Result;
                 }
                 else
                 {
@@ -293,7 +293,7 @@ namespace Sangmado.Fida.Http
 
             try
             {
-                var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
+                var response = _httpClient.DeleteAsync(url).Result;
                 statusCode = response.StatusCode;
                 if (!response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
@@ -324,11 +324,11 @@ namespace Sangmado.Fida.Http
             try
             {
                 byte[] responseBody = null;
-                var response = _httpClient.DeleteAsync(url).GetAwaiter().GetResult();
+                var response = _httpClient.DeleteAsync(url).Result;
                 statusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode) // StatusCode was in the range 200-299;
                 {
-                    responseBody = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+                    responseBody = response.Content.ReadAsByteArrayAsync().Result;
                 }
                 else
                 {
