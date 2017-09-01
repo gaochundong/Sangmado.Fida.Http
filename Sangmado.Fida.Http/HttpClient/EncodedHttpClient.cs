@@ -89,7 +89,7 @@ namespace Sangmado.Fida.Http
                         url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
-                        string.Format("HTTP [{0}] request to Uri[{1}] response with StatusCode[{2}|{3}] was unanticipated.",
+                        string.Format("HTTP [{0}] request to Uri[{1}] responses with StatusCode[{2}|{3}] is unanticipated.",
                             response.RequestMessage.Method, response.RequestMessage.RequestUri, (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
@@ -177,7 +177,7 @@ namespace Sangmado.Fida.Http
                         url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
-                        string.Format("HTTP [{0}] request to Uri[{1}] response with StatusCode[{2}|{3}] was unanticipated.",
+                        string.Format("HTTP [{0}] request to Uri[{1}] responses with StatusCode[{2}|{3}] is unanticipated.",
                             response.RequestMessage.Method, response.RequestMessage.RequestUri, (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
@@ -265,7 +265,7 @@ namespace Sangmado.Fida.Http
                         url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
-                        string.Format("HTTP [{0}] request to Uri[{1}] response with StatusCode[{2}|{3}] was unanticipated.",
+                        string.Format("HTTP [{0}] request to Uri[{1}] responses with StatusCode[{2}|{3}] is unanticipated.",
                             response.RequestMessage.Method, response.RequestMessage.RequestUri, (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
@@ -336,7 +336,7 @@ namespace Sangmado.Fida.Http
                         url, (int)response.StatusCode, response.StatusCode.ToString());
 
                     throw new UnanticipatedResponseException(
-                        string.Format("HTTP [{0}] request to Uri[{1}] response with StatusCode[{2}|{3}] was unanticipated.",
+                        string.Format("HTTP [{0}] request to Uri[{1}] responses with StatusCode[{2}|{3}] is unanticipated.",
                             response.RequestMessage.Method, response.RequestMessage.RequestUri, (int)response.StatusCode, response.StatusCode.ToString()));
                 }
 
